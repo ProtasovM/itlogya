@@ -14,7 +14,7 @@ class LessonService
         DateTime $startAt
     ) {
         //$this->db->beginTransaction(); //можно индекс сделать в принципе
-        $lesson = Lesson::selectWhere(
+        $lessonTeacher = Lesson::selectWhere(
             'teacher_id=? and start_at=?',
             [
                 [
@@ -27,7 +27,20 @@ class LessonService
                 ]
             ]
         );
-        if ($lesson) {
+        $lessonStudent = Lesson::selectWhere(
+            'students_id=? and start_at=?',
+            [
+                [
+                    'value' => $student->id,
+                    'type' => PDO::PARAM_INT,
+                ],
+                [
+                    'value' => $startAt->getTimestamp(),
+                    'type' => PDO::PARAM_INT,
+                ]
+            ]
+        );
+        if ($lessonTeacher || $lessonStudent) {
             $this->db->rollback();
             throw new Exception();
         }
