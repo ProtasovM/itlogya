@@ -5,14 +5,14 @@ return new class extends Migration
     public function up(): void
     {
         $this->db->query(
-            'CREATE TABLE teachers (`id` int not null auto_increment, `full_name` varchar(255) not null, primary key (id))'
+            'CREATE TABLE teacher_course (`teacher_id` int not null, `course_id` int not null)'
         );
     }
 
     public function down(): void
     {
         $this->db->query(
-            'DROP TABLE teachers'
+            'DROP TABLE teacher_course'
         );
     }
 };

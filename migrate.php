@@ -1,9 +1,7 @@
 <?php
 
 require __DIR__ . '/config.php';
-require __DIR__ . '/classes/Db.php';
 require __DIR__ . '/classes/Migration.php';
-
 /*
  * Мой awesome мигратор
  * распарсить папку с миграциями

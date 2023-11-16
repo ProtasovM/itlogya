@@ -5,7 +5,7 @@ return new class extends Migration
     public function up(): void
     {
         $this->db->query(
-            'CREATE TABLE courses (`id` int not null auto_increment, `language` varchar(255), primary key (id))'
+            'CREATE TABLE courses (`id` int not null auto_increment, `language` varchar(255) not null, primary key (id))'
         );
     }
 
