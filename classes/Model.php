@@ -44,7 +44,7 @@ abstract class Model
         } catch (Throwable $e) {
             Container::instance()->db->rollback();
 
-            var_dump($sql, $e->getMessage());
+            throw $e;
         }
 
         return new static($params);
@@ -81,13 +81,7 @@ abstract class Model
             'type' => PDO::PARAM_INT
         ];
 
-        try {
-            Container::instance()->db->query($sql, $toPdo);
-        } catch (Throwable $e) {
-            var_dump($e->getMessage());
-
-            return false;
-        }
+        Container::instance()->db->query($sql, $toPdo);
         return true;
     }
 
@@ -96,13 +90,7 @@ abstract class Model
         $sql = 'DELETE FROM ' . static::table;
         $sql .= ' WHERE id=?';
 
-        try {
-            Container::instance()->db->query($sql, [['value' => $this->attributes['id'], 'type' => PDO::PARAM_INT]]);
-        } catch (Throwable $e) {
-            var_dump($e->getMessage());
-
-            return false;
-        }
+        Container::instance()->db->query($sql, [['value' => $this->attributes['id'], 'type' => PDO::PARAM_INT]]);
         return true;
     }
 
@@ -144,13 +132,7 @@ abstract class Model
             $sql .= ' WHERE ' . $where;
         }
 
-        try {
-            $res = Container::instance()->db->query($sql, $params);
-        } catch (Throwable $e) {
-            var_dump($e->getMessage());
-
-            return false;
-        }
+        $res = Container::instance()->db->query($sql, $params);
         return array_map(fn ($item) => new static($item), $res);
     }
 }

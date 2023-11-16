@@ -27,13 +27,7 @@ class TeacherCourse extends Model
             ]
         ];
 
-        try {
-            Container::instance()->db->query($sql, $toPdo);
-        } catch (Throwable $e) {
-            var_dump($e->getMessage());
-
-            return false;
-        }
+        Container::instance()->db->query($sql, $toPdo);
         return true;
     }
 }

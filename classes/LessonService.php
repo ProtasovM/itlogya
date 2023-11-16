@@ -28,7 +28,7 @@ class LessonService
             ]
         );
         $lessonStudent = Lesson::selectWhere(
-            'students_id=? and start_at=?',
+            'student_id=? and start_at=?',
             [
                 [
                     'value' => $student->id,
