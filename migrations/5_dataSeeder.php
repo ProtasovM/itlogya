@@ -119,6 +119,10 @@ return new class extends Migration
             $lesson = Lesson::create($lesson);
         }
 
+        var_dump(Lesson::find(1));
+        var_dump(Lesson::all());
+
+
     }
 
     public function down(): void

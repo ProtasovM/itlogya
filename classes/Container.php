@@ -1,5 +1,8 @@
 <?php
 
+/**
+ * Простая реализация контейнера
+ */
 class Container
 {
     private static self $instance;

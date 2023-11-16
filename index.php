@@ -1,6 +1,5 @@
 <?php
-require './config.php';
-require './classes/Db.php';
+require __DIR__ . '/config.php';
 ?>
 
 <!doctype html>

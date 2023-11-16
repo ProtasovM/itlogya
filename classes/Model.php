@@ -1,6 +1,9 @@
 <?php
 
-class Model
+/**
+ * Eloquent без блекджека(
+ */
+abstract class Model
 {
     public array $attributes;
     public const table = 'table';
@@ -8,7 +11,7 @@ class Model
 
     public Db $db;
 
-    public function __construct($attributes)
+    public function __construct(array $attributes)
     {
         $this->attributes = $attributes;
         $this->db = Container::instance()->db;
@@ -116,18 +119,34 @@ class Model
         $this->attributes[$key] = $value;
     }
 
-    public static function find(int $id): static
+    public static function find(int $id)
     {
-        $sql = 'SELECT * FROM ' . self::table;
-        $sql .= ' WHERE id=' . $id;
+        $toPdo[] = [
+            'value' => $id,
+            'type' => PDO::PARAM_INT
+        ];
+
+        $res = static::selectWhere('WHERE id=?', $toPdo);
+
+        return $res[0];
+    }
+
+    public static function all()
+    {
+        return static::selectWhere();
+    }
+
+    public static function selectWhere($sql = '', $params = null)
+    {
+        $sql = 'SELECT * FROM ' . static::table . ' ' . $sql;
 
         try {
-            $res = Container::instance()->db->query($sql);
+            $res = Container::instance()->db->query($sql, $params);
         } catch (Throwable $e) {
             var_dump($e->getMessage());
 
             return false;
         }
-        return true;
+        return array_map(fn ($item) => new static($item), $res);
     }
 }
