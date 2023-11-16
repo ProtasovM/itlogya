@@ -1,15 +1,17 @@
 <?php
 
-require './classes/Db.php';
+require __DIR__ . '/config.php';
+require __DIR__ . '/classes/Db.php';
+require __DIR__ . '/classes/Migration.php';
 
-const DIR = __DIR__;
-const MIGRATIONS_DIR = DIR . '/migrations';
 /*
  * Мой awesome мигратор
  * распарсить папку с миграциями
  * накатить в прямом порядке
  * откатить в обратном
  */
+
+const MIGRATIONS_DIR = __DIR__ . '/migrations';
 
 if ($argc == 1) {
     echo 'set up|down' . PHP_EOL;
@@ -47,27 +49,31 @@ $existsMigrations = [];
 try {
     $existsMigrations = $db->query('SELECT * FROM migrations');
 } catch (PDOException) {
-    $db->query('CREATE TABLE migrations (`id` int, `class` varchar(255))');
+    $db->query('CREATE TABLE migrations (`id` int not null auto_increment, `class` varchar(255), primary key (id))');
 }
 
 if ($arg === 'up') {
     /*
      * Отрезолвим что есть
      */
-    $migrations = array_filter($migrations, function ($class, $name) use ($existsMigrations) {
-        foreach ($existsMigrations as $existsMigration) {
-            if ($name === $existsMigration['name']) {
-                return false;
+    $migrations = array_filter(
+        $migrations,
+        function ($class, $name) use ($existsMigrations) {
+            foreach ($existsMigrations as $existsMigration) {
+                if ($name === $existsMigration['class']) {
+                    return false;
+                }
             }
-        }
-        return true;
-    });
+            return true;
+        },
+        ARRAY_FILTER_USE_BOTH
+    );
 
     foreach ($migrations as $name => $migration) {
         $migration->up();
 
         $db->query(
-            'INSERT INTO migrations (name) VALUES (?)',
+            'INSERT INTO migrations (class) VALUES (?)',
             [
                 [
                     'value' => $name,
@@ -80,7 +86,7 @@ if ($arg === 'up') {
     }
 } else if ($arg === 'down') {
     foreach (array_reverse($existsMigrations) as $existMigration) {
-        $migrations[$existMigration['name']]->down();
+        $migrations[$existMigration['class']]->down();
 
         $db->query(
             'DELETE FROM migrations WHERE id = ?',
@@ -92,6 +98,6 @@ if ($arg === 'up') {
             ]
         );
 
-        echo $existMigration['name'] . ' down' . PHP_EOL;
+        echo $existMigration['class'] . ' down' . PHP_EOL;
     }
 }

@@ -1,7 +1,5 @@
 <?php
 
-require __DIR__ . '/../config.php';
-
 class Db
 {
     private \PDO $pdo;
@@ -21,7 +19,7 @@ class Db
 
         if ($params) {
             foreach ($params as $k => $v) {
-                $query->bindParam($k, $v['value'], $v['type']);
+                $query->bindParam($k+1, $v['value'], $v['type']);
             }
         }
 

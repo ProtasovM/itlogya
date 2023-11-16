@@ -1,10 +1,14 @@
 <?php
 
-require '../config.php';
-require './Db.php';
-
 abstract class Migration
 {
+    protected Db $db;
+
+    public function __construct()
+    {
+        $this->db = new Db();
+    }
+
     /**
      * Функция запускается при накате миграций
      * @return void
