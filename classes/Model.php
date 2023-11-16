@@ -126,7 +126,7 @@ abstract class Model
             'type' => PDO::PARAM_INT
         ];
 
-        $res = static::selectWhere('WHERE id=?', $toPdo);
+        $res = static::selectWhere('id=?', $toPdo);
 
         return $res[0];
     }
@@ -136,9 +136,13 @@ abstract class Model
         return static::selectWhere();
     }
 
-    public static function selectWhere($sql = '', $params = null)
+    public static function selectWhere(string $where = '', array $params = null)
     {
-        $sql = 'SELECT * FROM ' . static::table . ' ' . $sql;
+        $sql = 'SELECT * FROM ' . static::table;
+
+        if ($where) {
+            $sql .= ' WHERE ' . $where;
+        }
 
         try {
             $res = Container::instance()->db->query($sql, $params);

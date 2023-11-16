@@ -99,30 +99,25 @@ return new class extends Migration
                 'teacher_id' => 1,
                 'course_id' => 1,
                 'student_id' => 1,
-                'started_at' => strtotime('2023-11-16 17:00'),
+                'start_at' => strtotime('2023-11-16 17:00'),
             ],
             [
                 'teacher_id' => 2,
                 'course_id' => 2,
                 'student_id' => 2,
-                'started_at' => strtotime('2023-11-16 17:00'),
+                'start_at' => strtotime('2023-11-16 17:00'),
             ],
             [
                 'teacher_id' => 1,
                 'course_id' => 1,
                 'student_id' => 1,
-                'started_at' => strtotime('2023-11-16 18:00'),
+                'start_at' => strtotime('2023-11-16 18:00'),
             ],
         ];
 
         foreach ($lessons as $lesson) {
             $lesson = Lesson::create($lesson);
         }
-
-        var_dump(Lesson::find(1));
-        var_dump(Lesson::all());
-
-
     }
 
     public function down(): void

@@ -1,5 +1,8 @@
 <?php
 require __DIR__ . '/config.php';
+$courses = Course::all();
+$lessons = Lesson::all();
+global $container;
 ?>
 
 <!doctype html>
@@ -19,11 +22,39 @@ require __DIR__ . '/config.php';
                 </div>
             </nav>
             <div class="col-12">
-                <pre>
+                <?php
+                    foreach ($courses as $course) {
+                ?>
+                <h2>
+                    Курс:
                     <?php
-                        var_dump($_SERVER);
+                        echo $course->language
                     ?>
-                </pre>
+                </h2>
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th scope="col">Понедельник</th>
+                            <th scope="col">Вторник</th>
+                            <th scope="col">Среда</th>
+                            <th scope="col">Четверг</th>
+                            <th scope="col">Пятница</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <?php
+                            //foreach ($container->scheduleLessonsService->getPartsForWeekByCourse($course, 'now') as $value) {}
+                        ?>
+                        <tr>
+                            <td>Mark</td>
+                            <td>Otto</td>
+                            <td>@mdo</td>
+                        </tr>
+                    </tbody>
+                </table>
+                <?php
+                    }
+                ?>
             </div>
         </div>
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
