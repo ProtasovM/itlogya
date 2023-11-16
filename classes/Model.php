@@ -32,17 +32,17 @@ abstract class Model
         }
 
         try {
-            Container::instance()->db->query('START TRANSACTION');
+            Container::instance()->db->beginTransaction();
 
             Container::instance()->db->query($sql, $toPdo);
 
             $id = Container::instance()->db->query('SELECT LAST_INSERT_ID()')[0]['LAST_INSERT_ID()'];
 
-            Container::instance()->db->query('COMMIT');
+            Container::instance()->db->commit();
 
             $params['id'] = $id;
         } catch (Throwable $e) {
-            Container::instance()->db->query('ROLLBACK');
+            Container::instance()->db->rollback();
 
             var_dump($sql, $e->getMessage());
         }

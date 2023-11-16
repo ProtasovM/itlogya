@@ -8,6 +8,11 @@ class ScheduleLessonsService
     public const START_DAY_HOUR = '9';
     public const END_DAY_HOUR = '18';
 
+    public function __construct(
+        public LessonService $lessonService,
+    ){
+    }
+
     public function getWeekTitle(DateTime $date): string
     {
         $days = $this->getDaysOfWeek($date);

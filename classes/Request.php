@@ -2,6 +2,16 @@
 
 class Request
 {
+    public function method(): string
+    {
+        return $_SERVER['REQUEST_METHOD'];
+    }
+
+    public function isPost(): bool
+    {
+        return $this->method() === 'POST';
+    }
+
     public function params()
     {
         return array_merge(

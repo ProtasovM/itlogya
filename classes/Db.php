@@ -36,4 +36,19 @@ class Db
         }
         return $out;
     }
+
+    public function beginTransaction(): void
+    {
+        $this->pdo->query('START TRANSACTION');
+    }
+
+    public function commit(): void
+    {
+        $this->pdo->query('COMMIT');
+    }
+
+    public function rollback(): void
+    {
+        $this->pdo->query('ROLLBACK');
+    }
 }

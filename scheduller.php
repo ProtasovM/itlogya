@@ -97,7 +97,11 @@ $weekDate = $container->scheduleLessonsService->resolveWeek($container->request)
                                                 </div>
                                                 <div class="card-body text-success">
                                                     <h5 class="card-title">Свободно</h5>
-                                                    <a href="#" class="btn btn-outline-primary btn-sm">Записать</a>
+                                                    <a href="
+                                                        <?php
+                                                            echo '/add/?course_id=' . $lesson->course_id . '&teacher_id=' . $lesson->teacher_id . '&start_at=' . $lesson->start_at . '&week=' . $weekDate->format('y.m.d');
+                                                        ?>
+                                                    " class="btn btn-outline-primary btn-sm">Записать</a>
                                                 </div>
                                             </div>
                                             <?php
