@@ -42,12 +42,12 @@ foreach (scandir(MIGRATIONS_DIR) as $filename) {
 /*
  * теперь надо взять что накачено
  */
-$db = new Db();
+$container = Container::instance();
 $existsMigrations = [];
 try {
-    $existsMigrations = $db->query('SELECT * FROM migrations');
+    $existsMigrations = $container->db->query('SELECT * FROM migrations');
 } catch (PDOException) {
-    $db->query('CREATE TABLE migrations (`id` int not null auto_increment, `class` varchar(255), primary key (id))');
+    $container->db->query('CREATE TABLE migrations (`id` int not null auto_increment, `class` varchar(255), primary key (id))');
 }
 
 if ($arg === 'up') {
@@ -70,7 +70,7 @@ if ($arg === 'up') {
     foreach ($migrations as $name => $migration) {
         $migration->up();
 
-        $db->query(
+        $container->db->query(
             'INSERT INTO migrations (class) VALUES (?)',
             [
                 [
@@ -86,7 +86,7 @@ if ($arg === 'up') {
     foreach (array_reverse($existsMigrations) as $existMigration) {
         $migrations[$existMigration['class']]->down();
 
-        $db->query(
+        $container->db->query(
             'DELETE FROM migrations WHERE id = ?',
             [
                 [

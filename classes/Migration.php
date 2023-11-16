@@ -6,7 +6,7 @@ abstract class Migration
 
     public function __construct()
     {
-        $this->db = new Db();
+        $this->db = Container::instance()->db;
     }
 
     /**

@@ -19,7 +19,7 @@ class Db
 
         if ($params) {
             foreach ($params as $k => $v) {
-                $query->bindParam($k+1, $v['value'], $v['type']);
+                $query->bindParam($k+1, $v['value'], $v['type'] ?? PDO::PARAM_STR);
             }
         }
 

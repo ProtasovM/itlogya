@@ -9,3 +9,6 @@ const DB_DATABASE = 'itlogya';
 spl_autoload_register(function ($class) {
     include __DIR__ . '/classes/' . $class . '.php';
 });
+
+$container = Container::instance();
+$container->db = new Db();
