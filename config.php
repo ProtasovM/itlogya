@@ -14,3 +14,4 @@ global $container;
 $container = Container::instance();
 $container->db = new Db();
 $container->scheduleLessonsService = new ScheduleLessonsService();
+$container->request = new Request();

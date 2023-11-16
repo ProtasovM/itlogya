@@ -1,17 +1,48 @@
 <?php
 
+/**
+ * Основная идея в том чтобы отдавать инстансы уроков, если там проставлен ученик и ид, значит время занято
+ */
 class ScheduleLessonsService
 {
     public const START_DAY_HOUR = '9';
     public const END_DAY_HOUR = '18';
 
-    public function getPartsForWeekByCourse(Course $course, string $date)
+    public function getWeekTitle(DateTime $date): string
     {
-        $date = date_create($date);
+        $days = $this->getDaysOfWeek($date);
+        /** @var DateTime $beginDay */
+        $beginDay =  reset($days);
+        /** @var DateTime $endDay */
+        $endDay = end($days);
+
+        return $beginDay->format('m.d') . '-' . $endDay->format('m.d');
+    }
+
+    public function resolveWeek(Request $request): DateTime
+    {
+        if (isset($request->params()['week'])) {
+            return DateTime::createFromFormat('y.m.d', (string) $request->params()['week']);
+        }
+        return new DateTime();
+    }
+
+    public function getPrevWeekDate(DateTime $date): string
+    {
+        return (clone $date)->modify('- 1 week')->format('y.m.d');
+    }
+
+    public function getNextWeekDate(DateTime $date): string
+    {
+        return (clone $date)->modify('+ 1 week')->format('y.m.d');
+    }
+
+    public function getPartsForWeekByCourse(Course $course, DateTime $date)
+    {
         $out = [];
         foreach ($this->getDaysOfWeek($date) as $day) {
             /** @var DateTime $day */
-            $out[$day->getTimestamp()] = $this->getPartsForDayByCourse(
+            $out[] = $this->getPartsForDayByCourse(
                 $course,
                 $day
             );
@@ -39,7 +70,10 @@ class ScheduleLessonsService
         $out = [];
         foreach ($timeStarts as $timeStart) {
             /** @var DateTime $timeStart */
-            $out[$timeStart->getTimestamp()] = [];
+            $out[$timeStart->getTimestamp()] = [
+                'title' => $this->makeTitleForLessonDayPart($timeStart),
+                'lessons' => [],
+            ];
             foreach ($teachers as $teacher) {
                 $lesson = $this->getLessonForDayHourFromArray(
                     $teacher,
@@ -53,12 +87,23 @@ class ScheduleLessonsService
                         'course_id' => $course->id,
                         'student_id' => null,
                     ]);
+                } else {
+                    $lesson->student = Student::find($lesson->student_id);
                 }
-                $out[$timeStart->getTimestamp()][] = $lesson;
+                $lesson->teacher = $teacher;
+                $out[$timeStart->getTimestamp()]['lessons'][] = $lesson;
             }
         }
 
         return $out;
+    }
+
+    private function makeTitleForLessonDayPart(DateTime $dateTime): string
+    {
+        $title = $dateTime->format('H:i') . '-';
+        $title .= (clone $dateTime)->modify('+ 1 hour')->format('H:i');
+
+        return $title;
     }
 
     private function getLessonForDayHourFromArray(Teacher $teacher, DateTime $time, array $lessons)

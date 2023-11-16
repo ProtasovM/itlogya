@@ -4,14 +4,14 @@ return new class extends Migration
 {
     public function up(): void
     {
-        $cources = [
+        $courses = [
             'english',
             'russian',
             'spanish',
             'deutsch',
         ];
 
-        foreach ($cources as $cource) {
+        foreach ($courses as $cource) {
             Course::create([
                 'language' => $cource,
             ]);
@@ -116,7 +116,7 @@ return new class extends Migration
         ];
 
         foreach ($lessons as $lesson) {
-            $lesson = Lesson::create($lesson);
+            Lesson::create($lesson);
         }
     }
 
